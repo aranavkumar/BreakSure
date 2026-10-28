@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b6e5c" />
+    <title>BreakSure · Safe breaks, right on WhatsApp</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <main class="site-shell">
+      <section class="intro" aria-labelledby="page-title">
+        <div class="brand"><span class="brand-mark" aria-hidden="true">B</span><span>Break<span>Sure</span></span></div>
+        <p class="eyebrow">HEAT-SAFE BREAKS FOR OUTDOOR WORKERS</p>
+        <h1 id="page-title">A safe break should never cost you your day.</h1>
+        <p class="lede">BreakSure helps workers find verified nearby rest stops with water, shade and toilets. No download needed.</p>
+        <div class="feature-list" aria-label="BreakSure benefits">
+          <span><b>✓</b> Verified places</span>
+          <span><b>✓</b> Map directions</span>
+          <span><b>✓</b> Private by design</span>
+        </div>
+        <p class="note">Demo interface · Tap <strong>BREAK</strong> in the chat to begin</p>
+      </section>
+
+      <section class="phone-wrap" aria-label="BreakSure WhatsApp demo">
+        <div class="phone">
+          <div class="speaker"></div>
+          <div class="whatsapp">
+            <header class="chat-head">
+              <button class="back" aria-label="Back">‹</button>
+              <div class="avatar" aria-hidden="true">B</div>
+              <div class="contact"><strong>BreakSure</strong><span><i></i> online</span></div>
+              <button class="more" aria-label="More options">⋮</button>
+            </header>
+            <div class="chat-area" id="chatArea">
+              <div class="date-tag">TODAY</div>
+              <div class="message incoming welcome">
+                <p>Namaste! I’m <strong>BreakSure</strong> 👋</p>
+                <p>Need a safe, cool place to pause? Send <strong>BREAK</strong> and I’ll find verified stops near you.</p>
+                <time>10:42</time>
+              </div>
+              <div class="suggestion-row" id="suggestionRow">
+                <button class="quick-reply" id="breakButton">☀️ &nbsp;BREAK</button>
+              </div>
+              <div id="conversation"></div>
+            </div>
+            <form class="composer" id="composer">
+              <button type="button" class="attach" aria-label="Attach file">＋</button>
+              <input id="messageInput" autocomplete="off" aria-label="Message" placeholder="Message" />
+              <button class="send" aria-label="Send message" type="submit">➤</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
