@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Veloura Agentic AI - Clinical Dermatology & Productivity Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: #111827;
+      --card-border: #1f2937;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --accent-glow: rgba(59, 130, 246, 0.15);
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --success: #10b981;
+      --purple: #8b5cf6;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding-bottom: 40px;
+    }
+    header {
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 16px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-mark {
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .brand-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .header-badges {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .badge-blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+    .badge-green { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-red { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .badge-amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+
+    .container {
+      max-width: 1400px;
+      margin: 24px auto;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 24px;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #e5e7eb;
+    }
+
+    /* Uploader */
+    .dropzone {
+      border: 2px dashed #374151;
+      border-radius: 10px;
+      padding: 24px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: rgba(17, 24, 39, 0.4);
+    }
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+    }
+    .dropzone img {
+      max-height: 180px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      object-fit: contain;
+    }
+    .dropzone-hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .form-group {
+      margin-top: 14px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .form-control {
+      width: 100%;
+      background: #1f2937;
+      border: 1px solid #374151;
+      border-radius: 6px;
+      padding: 8px 10px;
+      color: #fff;
+      font-size: 0.85rem;
+      outline: none;
+    }
+    .form-control:focus {
+      border-color: var(--accent);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .btn {
+      width: 100%;
+      margin-top: 18px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      font-size: 0.9rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn:hover { background: var(--accent-hover); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Results layout */
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .full-width { grid-column: span 2; }
+
+    /* Metrics bars */
+    .metric-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+    }
+    .progress-bar-bg {
+      background: #1f2937;
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    /* Timing waterfall */
+    .timing-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+      font-size: 0.8rem;
+    }
+    .timing-label {
+      width: 150px;
+      color: var(--text-muted);
+    }
+    .timing-bar-container {
+      flex: 1;
+      background: #1f2937;
+      height: 16px;
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    .timing-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #60a5fa);
+      border-radius: 4px;
+    }
+    .timing-value {
+      font-family: 'JetBrains Mono', monospace;
+      width: 70px;
+      text-align: right;
+      color: #60a5fa;
+      font-weight: 600;
+    }
+
+    /* Productivity stats strip */
+    .stats-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* Sample loader buttons */
+    .samples-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .sample-btn {
+      flex: 1;
+      font-size: 0.7rem;
+      background: #1f2937;
+      border: 1px solid #374151;
+      color: var(--text-muted);
+      padding: 4px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .sample-btn:hover { color: #fff; border-color: var(--accent); }
+
+    .code-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-mark">V</div>
+    <div>
+      <div class="brand-title">Veloura Agentic AI</div>
+      <div class="brand-subtitle">Clinical Dermatology & Productivity Engine (2026)</div>
+    </div>
+  </div>
+  <div class="header-badges">
+    <span class="badge badge-blue" id="deviceBadge">Device: Checking...</span>
+    <span class="badge badge-green" id="modelBadge">Model: EfficientNet</span>
+    <span class="badge badge-amber">FDA/MDR Safety Gate: Active</span>
+  </div>
+</header>
+
+<div class="container">
+  <!-- Left Column: Image & Context Input -->
+  <div>
+    <div class="card">
+      <div class="card-title">
+        <span>Clinical Case Intake</span>
+        <span class="code-pill">6-Agent Pipeline</span>
+      </div>
+
+      <div class="dropzone" id="dropzone">
+        <img id="previewImg" style="display:none;" />
+        <div id="dropPrompt">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="1.5" style="margin-bottom:8px;">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          <p style="font-size:0.85rem; font-weight:500;">Drop skin lesion image here</p>
+          <p class="dropzone-hint">or click to browse from disk (JPEG / PNG)</p>
+        </div>
+        <input type="file" id="fileInput" accept="image/*" style="display:none;" />
+      </div>
+
+      <div class="samples-row">
+        <button class="sample-btn" onclick="generateSampleLesion('mel')">Load Sample Melanoma</button>
+        <button class="sample-btn" onclick="generateSampleLesion('nv')">Load Sample Mole (Nevus)</button>
+        <button class="sample-btn" onclick="generateSampleLesion('bcc')">Load Sample BCC</button>
+      </div>
+
+      <div class="form-row form-group">
+        <div>
+          <label>Patient Age</label>
+          <input type="number" id="patientAge" class="form-control" value="58" placeholder="e.g. 58" />
+        </div>
+        <div>
+          <label>Patient Sex</label>
+          <select id="patientSex" class="form-control">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Anatomical Location</label>
+        <select id="patientSite" class="form-control">
+          <option value="back">Back / Upper Trunk (High Risk)</option>
+          <option value="face">Face / Scalp</option>
+          <option value="chest">Chest</option>
+          <option value="lower_extremity">Lower Extremity (Leg / Foot)</option>
+          <option value="upper_extremity">Upper Extremity (Arm / Hand)</option>
+          <option value="abdomen">Abdomen</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Lesion Evolution / History</label>
+        <select id="patientEvolution" class="form-control">
+          <option value="GROWING">Growing in size / changing margins</option>
+          <option value="BLEEDING">Occasional bleeding / oozing</option>
+          <option value="ITCHING">Pruritic (itching)</option>
+          <option value="STABLE" selected>Stable / unchanged</option>
+        </select>
+      </div>
+
+      <button class="btn" id="analyzeBtn" onclick="runCaseAnalysis()">
+        <span>Run Multi-Agent Analysis</span>
+        <span id="btnSpinner" style="display:none;">⏳</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Right Column: Productivity & Diagnostic Report -->
+  <div>
+    <!-- Real-time Productivity Strip -->
+    <div class="stats-strip">
+      <div class="stat-box">
+        <div class="stat-number" id="statCases">0</div>
+        <div class="stat-label">Cases Processed</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number" id="statAvgLatency">0 ms</div>
+        <div class="stat-label">Avg Turnaround</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number" id="statThroughput">0</div>
+        <div class="stat-label">Throughput (Cases/min)</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number" style="color:#10b981;">100%</div>
+        <div class="stat-label">Safety Compliance</div>
+      </div>
+    </div>
+
+    <!-- Active Results Grid -->
+    <div class="results-grid" id="resultsGrid" style="display:none;">
+      
+      <!-- Diagnosis & Differential Card -->
+      <div class="card">
+        <div class="card-title">
+          <span>Primary Diagnosis</span>
+          <span class="badge" id="riskBadge">LOW RISK</span>
+        </div>
+        <div style="margin-bottom:12px;">
+          <h2 id="primaryName" style="font-size:1.4rem; font-weight:700;">-</h2>
+          <p id="primaryCategory" style="color:var(--text-muted); font-size:0.8rem;">-</p>
+        </div>
+        <div class="metric-item">
+          <span>Confidence Score</span>
+          <strong id="confidenceVal">0%</strong>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="confidenceBar" style="width:0%; background:#3b82f6;"></div>
+        </div>
+
+        <div style="margin-top:16px;">
+          <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; margin-bottom:8px; font-weight:600;">Differential Probabilities</div>
+          <div id="differentialList"></div>
+        </div>
+      </div>
+
+      <!-- Lesion Analysis & ABCD Card -->
+      <div class="card">
+        <div class="card-title">
+          <span>Lesion Segmentation & ABCD</span>
+          <span class="badge badge-blue">GrabCut Mask</span>
+        </div>
+        <div style="display:flex; justify-content:center; margin-bottom:12px;">
+          <img id="overlayImg" style="max-height:160px; border-radius:8px; border:1px solid #374151;" />
+        </div>
+        <div class="metric-item">
+          <span>Asymmetry (A)</span>
+          <strong id="abcdAsymmetry">-</strong>
+        </div>
+        <div class="metric-item">
+          <span>Border Irregularity (B)</span>
+          <strong id="abcdBorder">-</strong>
+        </div>
+        <div class="metric-item">
+          <span>Color Variation (C)</span>
+          <strong id="abcdColor">-</strong>
+        </div>
+        <div class="metric-item">
+          <span>Equivalent Diameter (D)</span>
+          <strong id="abcdDiameter">-</strong>
+        </div>
+      </div>
+
+      <!-- Agent Latency & Productivity Waterfall -->
+      <div class="card full-width">
+        <div class="card-title">
+          <span>Agent Execution Waterfall & Productivity Latency</span>
+          <span class="badge badge-green" id="totalLatencyBadge">Total: 0 ms</span>
+        </div>
+        <div id="timingWaterfall"></div>
+      </div>
+
+      <!-- Clinical Safety & Guardrails Card -->
+      <div class="card full-width">
+        <div class="card-title">
+          <span>Clinical Safety Engine & Regulatory Decision</span>
+          <span class="badge" id="safetyDecisionBadge">EVALUATING</span>
+        </div>
+        <div id="safetyWarnings" style="font-size:0.85rem; color:#e5e7eb;"></div>
+      </div>
+
+    </div>
+
+    <!-- Empty State -->
+    <div class="card" id="emptyState" style="text-align:center; padding:48px 24px;">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#4b5563" stroke-width="1.5" style="margin-bottom:12px;">
+        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+      </svg>
+      <h3 style="font-size:1.1rem; margin-bottom:6px;">No Active Case Loaded</h3>
+      <p style="color:var(--text-muted); font-size:0.85rem; max-width:440px; margin:0 auto;">
+        Upload a dermoscopic or skin lesion image from the intake panel, or click one of the quick sample buttons to test the 6-agent pipeline and observe turnaround productivity in real time.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let currentFile = null;
+
+// File drop handlers
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('fileInput');
+const previewImg = document.getElementById('previewImg');
+const dropPrompt = document.getElementById('dropPrompt');
+
+dropzone.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', (e) => {
+  if (e.target.files.length) handleFile(e.target.files[0]);
+});
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+});
+
+function handleFile(file) {
+  currentFile = file;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    previewImg.src = e.target.result;
+    previewImg.style.display = 'block';
+    dropPrompt.style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+// Quick synthetic canvas generator to let user test immediately
+function generateSampleLesion(type) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 300;
+  canvas.height = 300;
+  const ctx = canvas.getContext('2d');
+  
+  // Skin tone background
+  ctx.fillStyle = '#e8beac';
+  ctx.fillRect(0, 0, 300, 300);
+
+  if (type === 'mel') {
+    // Asymmetric dark irregular lesion with pigment variation
+    ctx.beginPath();
+    ctx.ellipse(140, 145, 65, 45, Math.PI / 4, 0, 2 * Math.PI);
+    ctx.fillStyle = '#2b1d14';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.ellipse(165, 135, 40, 30, Math.PI / 6, 0, 2 * Math.PI);
+    ctx.fillStyle = '#6e3822';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(120, 160, 25, 0, 2 * Math.PI);
+    ctx.fillStyle = '#110b07';
+    ctx.fill();
+    document.getElementById('patientEvolution').value = 'GROWING';
+    document.getElementById('patientSite').value = 'back';
+  } else if (type === 'nv') {
+    // Symmetrical, uniform brown mole
+    ctx.beginPath();
+    ctx.arc(150, 150, 50, 0, 2 * Math.PI);
+    ctx.fillStyle = '#5c3a21';
+    ctx.fill();
+    document.getElementById('patientEvolution').value = 'STABLE';
+    document.getElementById('patientSite').value = 'abdomen';
+  } else {
+    // Pearly translucent BCC with central indentation
+    ctx.beginPath();
+    ctx.ellipse(150, 150, 55, 50, 0, 0, 2 * Math.PI);
+    ctx.fillStyle = '#b8756c';
+    ctx.fill();
+    document.getElementById('patientEvolution').value = 'BLEEDING';
+    document.getElementById('patientSite').value = 'face';
+  }
+
+  canvas.toBlob((blob) => {
+    const file = new File([blob], `sample_${type}.png`, { type: 'image/png' });
+    handleFile(file);
+  });
+}
+
+// Fetch health on load
+async function fetchHealth() {
+  try {
+    const res = await fetch('/api/health');
+    const data = await res.json();
+    document.getElementById('deviceBadge').textContent = `Device: ${data.device}`;
+    document.getElementById('modelBadge').textContent = `Model: ${data.architecture.split(' ')[0]}`;
+  } catch (e) {
+    document.getElementById('deviceBadge').textContent = 'Backend: Standalone UI';
+  }
+}
+fetchHealth();
+
+// Refresh Productivity stats
+async function refreshProductivity() {
+  try {
+    const res = await fetch('/api/productivity/metrics');
+    const data = await res.json();
+    document.getElementById('statCases').textContent = data.total_cases_processed;
+    document.getElementById('statAvgLatency').textContent = `${data.average_turnaround_time_ms} ms`;
+    document.getElementById('statThroughput').textContent = data.throughput_cases_per_minute;
+  } catch (e) {}
+}
+setInterval(refreshProductivity, 5000);
+refreshProductivity();
+
+// Run case analysis
+async function runCaseAnalysis() {
+  if (!currentFile) {
+    alert('Please drop an image or click a sample button first.');
+    return;
+  }
+
+  const btn = document.getElementById('analyzeBtn');
+  const spinner = document.getElementById('btnSpinner');
+  btn.disabled = true;
+  spinner.style.display = 'inline';
+
+  const formData = new FormData();
+  formData.append('image', currentFile);
+  formData.append('age', document.getElementById('patientAge').value);
+  formData.append('sex', document.getElementById('patientSex').value);
+  formData.append('anatomical_site', document.getElementById('patientSite').value);
+  formData.append('evolution', document.getElementById('patientEvolution').value);
+
+  try {
+    const res = await fetch('/api/cases/analyze', { method: 'POST', body: formData });
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+    renderResults(data);
+    refreshProductivity();
+  } catch (err) {
+    alert('Analysis failed: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    spinner.style.display = 'none';
+  }
+}
+
+function renderResults(data) {
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('resultsGrid').style.display = 'grid';
+
+  const diag = data.diagnosis;
+  const primary = diag.primary_diagnosis;
+  document.getElementById('primaryName').textContent = primary.name;
+  document.getElementById('primaryCategory').textContent = primary.category;
+  document.getElementById('confidenceVal').textContent = `${primary.confidence_percent}%`;
+  document.getElementById('confidenceBar').style.width = `${primary.confidence_percent}%`;
+
+  const riskBadge = document.getElementById('riskBadge');
+  riskBadge.textContent = primary.risk_level;
+  riskBadge.className = `badge ${primary.risk_level === 'CRITICAL' ? 'badge-red' : primary.risk_level === 'HIGH' ? 'badge-amber' : 'badge-green'}`;
+
+  // Differential list
+  const diffContainer = document.getElementById('differentialList');
+  diffContainer.innerHTML = '';
+  diag.top_differential.forEach(item => {
+    diffContainer.innerHTML += `
+      <div class="metric-item" style="margin-bottom:4px;">
+        <span>${item.name} <small style="color:var(--text-muted);">(${item.code})</small></span>
+        <strong style="color:${item.color}">${item.probability}%</strong>
+      </div>
+      <div class="progress-bar-bg" style="height:4px; margin-bottom:8px;">
+        <div class="progress-bar-fill" style="width:${item.probability}%; background:${item.color}"></div>
+      </div>
+    `;
+  });
+
+  // Lesion ABCD
+  const lesion = data.lesion_analysis;
+  if (lesion && lesion.overlay_image_base64) {
+    document.getElementById('overlayImg').src = `data:image/png;base64,${lesion.overlay_image_base64}`;
+    document.getElementById('overlayImg').style.display = 'block';
+  }
+  const abcd = lesion ? lesion.features : null;
+  if (abcd) {
+    document.getElementById('abcdAsymmetry').textContent = `${abcd.asymmetry.score} (${abcd.asymmetry.interpretation})`;
+    document.getElementById('abcdBorder').textContent = `${abcd.border_irregularity.score} (${abcd.border_irregularity.interpretation})`;
+    document.getElementById('abcdColor').textContent = `${abcd.color_variation.score} (${abcd.color_variation.interpretation})`;
+    document.getElementById('abcdDiameter').textContent = `${abcd.diameter.equivalent_diameter_px} px`;
+  }
+
+  // Waterfall
+  const timings = data.execution_timings_ms || {};
+  document.getElementById('totalLatencyBadge').textContent = `Total: ${timings.end_to_end} ms`;
+  const waterfall = document.getElementById('timingWaterfall');
+  waterfall.innerHTML = '';
+  const total = timings.end_to_end || 1;
+
+  const agentOrder = [
+    { key: 'image_quality', label: '1. Image Quality Agent' },
+    { key: 'lesion_analysis', label: '2. Lesion GrabCut & ABCD' },
+    { key: 'diagnosis', label: '3. Neural Classifier + TTA' },
+    { key: 'reasoning_context', label: '4. Reasoning & Context' },
+    { key: 'safety_agent', label: '5. Safety Rules Engine' },
+    { key: 'master_coordinator', label: '6. Master Synthesis' }
+  ];
+
+  agentOrder.forEach(agent => {
+    const ms = timings[agent.key] || 0;
+    const pct = Math.max(2, Math.min(100, (ms / total) * 100));
+    waterfall.innerHTML += `
+      <div class="timing-row">
+        <div class="timing-label">${agent.label}</div>
+        <div class="timing-bar-container">
+          <div class="timing-bar" style="width:${pct}%;"></div>
+        </div>
+        <div class="timing-value">${ms} ms</div>
+      </div>
+    `;
+  });
+
+  // Safety
+  const safety = data.safety || {};
+  const sBadge = document.getElementById('safetyDecisionBadge');
+  sBadge.textContent = safety.triage_tier;
+  sBadge.className = `badge ${safety.safety_gate_passed ? 'badge-green' : 'badge-red'}`;
+
+  const wContainer = document.getElementById('safetyWarnings');
+  wContainer.innerHTML = '';
+  (safety.clinical_warnings || []).forEach(w => {
+    wContainer.innerHTML += `<p style="margin-bottom:4px;">⚠️ ${w}</p>`;
+  });
+}
+</script>
+
+</body>
+</html>
